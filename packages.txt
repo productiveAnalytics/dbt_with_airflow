@@ -1,0 +1,3 @@
+# OS level packages for astronomer-cosmos
+gcc
+python3-dev
