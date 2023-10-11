@@ -85,7 +85,7 @@ $ dbt test
 $ dbt docs generate
 ```
 
-10. View the documentation for the project:
+10. View the documentation for the project: (Note: it opens localhost:8080 so ensure that port is avaialbel. You may want to do "astro dev stop" before bringing up the Lineage Graph)
 ```bash
 $ dbt docs serve
 ```
