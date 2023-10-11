@@ -1,0 +1,15 @@
+# This file is specific to Astro
+# This automatically updates the dbt foler in the Astro's Docker container so that there is no need to restart container for any change in DAGs
+version: "3.1"
+services:
+  scheduler:
+    volumes:
+      - ./dbt:/usr/local/airflow/dbt:rw
+
+  webserver:
+    volumes:
+      - ./dbt:/usr/local/airflow/dbt:rw
+
+  triggerer:
+    volumes:
+      - ./dbt:/usr/local/airflow/dbt:rw
