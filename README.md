@@ -3,6 +3,90 @@ Overview
 
 Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
 
+Setup for DBT with Airflow
+==========================
+
+Install Astronomer: ```brew install astro```
+Check Astronomer: ```astro version```
+
+Initialize project: ```astro dev init```
+
+Install packages required for astronomer-cosmos's underlying packages
+```
+# packages.txt
+gcc
+python3-dev
+```
+
+Install Python package, in requirements.txt add "astronomer-cosmos[dbt.all]" or specific db dapter
+```
+astronomer-cosmos[dbt.postgres]
+```
+
+Copy sample dbt repo under dags/dbt/ folder
+```
+git clone https://github.com/dbt-labs/jaffle_shop.git
+```
+
+dbt_with_airflow
+ |___ dags
+    |___ dbt
+       |___jaffle_shop
+
+Create a folder macros in jaffle_shop and generate drop_tables.sql
+```
+# macros/drop_table.sql
+{%- macro drop_table(table_name) -%}
+    {%- set drop_query -%}
+        DROP TABLE IF EXISTS {{ target.schema }}.{{ table_name }} CASCADE
+    {%- endset -%}
+    {% do run_query(drop_query) %}
+{%- endmacro -%}
+
+``` 
+
+Create new Astronomer specific file "docker-compose.override.yml"
+```
+# Allow Astroner airflow to automatically reload the DAGs
+version: "3.1"
+services:
+  scheduler:
+    volumes:
+      - ./dbt:/usr/local/airflow/dbt:rw
+
+  webserver:
+    volumes:
+      - ./dbt:/usr/local/airflow/dbt:rw
+
+  triggerer:
+    volumes:
+      - ./dbt:/usr/local/airflow/dbt:rw
+```
+
+Create the file "dbt-requirements.txt" 
+(Note: use the same version as that of installed dbt-core and dbt-postgres)
+```
+astronomer-cosmos==1.1.3
+dbt-core==1.5.4
+dbt-postgres==1.5.4
+```
+
+Append the following in existing Dockefile
+```
+# install dbt into a venv to avoid package dependency conflicts
+WORKDIR "/usr/local/airflow"
+COPY dbt-requirements.txt ./
+RUN python -m virtualenv dbt_venv && source dbt_venv/bin/activate && \
+    pip install --no-cache-dir -r dbt-requirements.txt && deactivate
+```
+
+MUST DO: 
+As the Astronomer-Cosmos works with actual Airflow connection, instead of DBT's profile.yml, setup PostgreSQL connection in Airflow Admin UI
+TIP: 
+1) Enable testing of Airflow connection by adding AIRFLOW__CORE__TEST_CONNECTION=Enabled to the .env file for Docker
+2) As the Astronomer Airflow is dockerized, if the PostgreSQL is on localhost, while setting Airflow connection use "host.docker.internal" instead of "localhost"
+
+
 Project Contents
 ================
 
