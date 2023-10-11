@@ -6,6 +6,48 @@ Welcome to Astronomer! This project was generated after you ran 'astro dev init'
 Setup for DBT with Airflow
 ==========================
 
+Install PostgreSQL:
+Search for PostgreSQL version
+```bash
+$ brew search postgresql
+```
+or 
+```bash
+$ brew formulae | grep  postgresql@
+```
+Install
+```
+brew install postgresql@14
+```
+
+To avoid conflicting with Astronomer Airlfow's internal PostgreSQL, update PSQL port from 5432 to 54321 
+```
+export POSTGRE_SQL_VERSION=14
+export POSTGRE_SQL_HOME="${HOMEBREW_ROOT}/opt/postgresql@${POSTGRE_SQL_VERSION}"
+export PATH="${POSTGRE_SQL_HOME}/bin:$PATH"
+
+export LDFLAGS="-L${POSTGRE_SQL_HOME}/lib"
+export CPPFLAGS="-I${POSTGRE_SQL_HOME}/include"
+
+# /opt/homebrew/var/postgresql@14
+export PGDATA="${HOMEBREW_ROOT}/var/postgresql@${POSTGRE_SQL_VERSION}"
+export PGPORT=54321
+```
+
+Note: For homebrew installed PSQL, need to update ${PGDATA}/postgresql.conf (because PGPORT does not get considered for port)
+
+Start PostgreSQL as service and confirm
+```
+brew services start postgresql@${POSTGRE_SQL_VERSION}
+brew services list
+nc -vz localhost ${PGPORT}
+```
+
+Create database "dbt_test_db" and schema "dbt_test_schema"
+Using DBeaver, Create user "dbt_user" and assign roles to allow to be superuser, db creation, etc.
+
+----
+
 Install Astronomer: ```brew install astro```
 Check Astronomer: ```astro version```
 
