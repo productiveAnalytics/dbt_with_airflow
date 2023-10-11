@@ -22,6 +22,29 @@ The raw data consists of customers, orders, and payments, with the following ent
 ![Jaffle Shop ERD](/etc/jaffle_shop_erd.png)
 
 
+### Profile
+1. Refer sample profiles.yml
+```
+# profiles.yml
+jaffle_shop:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: postgres
+      password: postgres
+      port: 5432
+      dbname: dbt_test_db
+      schema: dbt_local_schema
+      threads: 4
+```
+2. The parent directory for profiles.yml is determined using the following precedence:
+1) --profiles-dir option
+2) DBT_PROFILES_DIR environment variable
+3) current working directory
+4) ~/.dbt/ directory
+
 ### Running this project
 To get up and running with this project:
 1. Install dbt using [these instructions](https://docs.getdbt.com/docs/installation).
