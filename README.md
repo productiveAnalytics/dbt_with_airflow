@@ -142,6 +142,7 @@ As the Astronomer-Cosmos works with actual Airflow connection, instead of DBT's 
 TIP: 
 1) Enable testing of Airflow connection by adding AIRFLOW__CORE__TEST_CONNECTION=Enabled to the .env file for Docker
 2) As the Astronomer Airflow is dockerized, if the PostgreSQL is on localhost, while setting Airflow connection use "host.docker.internal" instead of "localhost"
+3) ```ping -c 1 host.docker.internal```
 
 
 Project Contents
