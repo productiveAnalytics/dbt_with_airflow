@@ -6,11 +6,23 @@ Welcome to Astronomer! This project was generated after you ran 'astro dev init'
 Setup for DBT with Airflow
 ==========================
 
+
+
 Install DBT:
 ```
-brew tap dbt-labs/dbt
-brew install dbt-postgres
-brew install dbt-snowflake
+#brew tap dbt-labs/dbt
+#brew install dbt-postgres
+#brew install dbt-snowflake
+
+### Create virtual env in dbt-venv
+python3 -m venv dbt-venv
+
+### Activate virtual env  
+source dbt-venv/bin/activate 
+
+### install dbt adapters
+python3 -m pip install dbt-postgres dbt-glue dbt-databricks
+
 ```
 
 # To use different version of DBT adapter
@@ -19,9 +31,9 @@ brew install dbt-snowflake
 # brew link dbt-<adapter>@1.6.5
 
 Confirm DBT version and plugins:
-```dbt -- version```
+```dbt --version```
 
-Install PostgreSQL:
+Install PostgreSQL (MacOS):
 Search for PostgreSQL version
 ```bash
 $ brew search postgresql
